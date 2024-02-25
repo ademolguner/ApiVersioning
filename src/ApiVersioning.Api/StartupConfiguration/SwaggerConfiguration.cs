@@ -18,9 +18,10 @@ public static class SwaggerConfiguration
             opt.AssumeDefaultVersionWhenUnspecified = true;
             opt.ReportApiVersions = true;
             opt.ApiVersionReader = ApiVersionReader
-                                   .Combine(new UrlSegmentApiVersionReader(),
-                                            new HeaderApiVersionReader("x-api-version"),
-                                            new MediaTypeApiVersionReader("x-api-version"));
+                                   .Combine(new UrlSegmentApiVersionReader(), 
+                                            new QueryStringApiVersionReader(),
+                                            new HeaderApiVersionReader("my-api-version-key"),
+                                            new MediaTypeApiVersionReader("my-api-version-key"));
         });
 
         services.ConfigureOptions<ConfigureSwaggerOptions>();
