@@ -7,8 +7,8 @@ public static class EndpointConfigurations
 {
     public static IEndpointRouteBuilder RegistrationEndpoints(this IEndpointRouteBuilder app)
     {
-        //EndPoints.v1.ProductController.MapProductApiEndpoints(app);
-        //EndPoints.v2.ProductController.MapProductApiEndpoints(app);
+        //EndPoints.v1.ArticleController.MapProductApiEndpoints(app);
+        //EndPoints.v2.ArticleController.MapProductApiEndpoints(app);
         return app;
     }
 }

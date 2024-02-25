@@ -1,13 +1,13 @@
 using ApiVersioning.Api.MockData;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiVersioning.Api.Controllers.v1;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/[controller]")]
 [ApiVersion("1.0")]
-public class ProductController : ControllerBase
+public class ArticleController : ControllerBase
 {
     
     [MapToApiVersion("1.0")]
@@ -15,10 +15,8 @@ public class ProductController : ControllerBase
     [Route("id/{id}")]
     public Task<IResult> GetByIdAsync(string id)
     {
-        var allProducts = MockProduct.GetDatabaseExampleModels();
+        var allProducts = MockArticle.GetDatabaseExampleModels();
         var response = allProducts.FirstOrDefault(c => c.Id == id);
-        if(response!=null)
-            return Task.FromResult(Results.Ok(response));
         return Task.FromResult(Results.Ok(response));
     }
     
@@ -27,7 +25,7 @@ public class ProductController : ControllerBase
     [Route("list")]
     public Task<IResult> GetListAsync()
     {
-        var allProducts = MockProduct.GetDatabaseExampleModels();
+        var allProducts = MockArticle.GetDatabaseExampleModels().OrderBy(d=>d.OrderValue);
         return Task.FromResult(Results.Ok(allProducts));
     }
 }

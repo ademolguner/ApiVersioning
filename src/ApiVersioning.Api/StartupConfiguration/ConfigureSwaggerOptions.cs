@@ -10,18 +10,11 @@ namespace ApiVersioning.Api.StartupConfiguration;
 
 public class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider,IConfiguration configuration) : IConfigureNamedOptions<SwaggerGenOptions>
 {
-    public void Configure(SwaggerGenOptions options)
-    {
-        foreach (var description in provider.ApiVersionDescriptions)
-        {
-            options.SwaggerDoc(description.GroupName, CreateVersionInfo(description));
-        }
-    }
-    
+    //3
     public void Configure(string? name, SwaggerGenOptions options)
     {
         options.OperationFilter<SwaggerJsonIgnoreFilter>();
-        string folder = Environment.CurrentDirectory.Replace(Assembly.GetExecutingAssembly().GetName().Name, "");
+        var folder = Environment.CurrentDirectory.Replace(Assembly.GetExecutingAssembly().GetName().Name!, "");
         if (!string.IsNullOrEmpty(folder))
             foreach (var nm in Directory.GetFiles(folder, "*.xml", SearchOption.AllDirectories))
                 options.IncludeXmlComments(filePath: nm);
@@ -31,6 +24,16 @@ public class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider,ICo
         Configure(options);
     }
     
+    //4
+    public void Configure(SwaggerGenOptions options)
+    {
+        foreach (var description in provider.ApiVersionDescriptions)
+        {
+            options.SwaggerDoc(description.GroupName, CreateVersionInfo(description));
+        }
+    }
+    
+    //5
     private OpenApiInfo CreateVersionInfo(ApiVersionDescription desc)
     {
         var section = configuration.GetSection("SwaggerSettings");
@@ -38,7 +41,7 @@ public class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider,ICo
         var apiDesc = section.GetValue<string>("Description");
         var teamName = section.GetValue<string>("TeamName");
         var teamEmail = section.GetValue<string>("TeamEmail");
-        //var termsOfService = section.GetValue<string>("TermsOfService");
+        var termsOfService = section.GetValue<string>("TermsOfService");
         
         var info = new OpenApiInfo
         {
@@ -49,7 +52,8 @@ public class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider,ICo
             {
                 Name = teamName,
                 Email = teamEmail
-            }
+            },
+            TermsOfService = new Uri(string.IsNullOrEmpty(termsOfService)?"https://www.hepsiburada.com/":termsOfService)
         };
 
         if (desc.IsDeprecated)
